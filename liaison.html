@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="liaison.css" type="text/css" media="all" />
+  <link rel="shortcut icon" href="liaison/laison.png" type="image/x-icon" />
+  <title>Liaison</title>
+
+  <style>
+    #a {
+      text-decoration: none;
+      transition: border 0.3s ease;
+    }
+
+    a {
+      text-decoration: none;
+      transition: border 0.3s ease;
+    }
+
+    a:hover {
+      border-bottom: 3px solid #8B0000;
+    }
+
+    a:active {
+      border-bottom: 3px solid #8B0000;
+    }
+
+    /* 🔹 Badge do chat */
+    .chat-link {
+      position: relative;
+      display: inline-block;
+    }
+
+    #chatBadge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 2px 6px;
+      min-width: 16px;
+      text-align: center;
+      display: none;
+    }
+    :root{
+  --bg:#0a0a0c;
+  --bg2:#141416;
+  --card:#1a1a1d;
+  --accent:#e50914; /* Netflix red vibe */
+  --muted:#9a9a9a;
+  --radius:14px;
+  --max-w:1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family: Inter, system-ui, sans-serif;
+  background:linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.brand{display:flex;align-items:center;gap:10px;}
+.logo{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--accent);
+  display:grid;place-items:center;
+  font-weight:700;font-size:18px;color:white;
+  box-shadow:0 4px 14px rgba(229,9,20,0.5);
+}
+h1{font-size:20px;margin:0}
+.sub{font-size:13px;color:var(--muted)}
+.controls{display:flex;gap:8px;align-items:center;}
+.search{
+  background:var(--card);
+  border:1px solid #222;
+  padding:8px 12px;
+  border-radius:12px;
+  min-width:200px;
+  color:white;
+}
+.btn{
+  background:var(--accent);
+  border:none;
+  padding:8px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  color:white;font-weight:600;
+  transition:.2s;
+}
+.btn:disabled{opacity:.6;cursor:wait;}
+.btn:hover:not(:disabled){filter:brightness(1.2)}
+main{
+  width:100%;
+  max-width:var(--max-w);
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:0 18px 28px;
+}
+.scroll-area{
+  flex:1;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scroll-behavior:smooth;
+}
+.scroll-area::-webkit-scrollbar{width:10px}
+.scroll-area::-webkit-scrollbar-thumb{background:#333;border-radius:10px}
+section{margin:24px 0}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px}
+.section-head h2{margin:0;font-size:18px;color:var(--accent)}
+.hscroll{
+  display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory;
+}
+.hscroll::-webkit-scrollbar{height:8px}
+.hscroll::-webkit-scrollbar-thumb{background:#333;border-radius:10px}
+.card{
+  min-width:180px;max-width:200px;
+  background:var(--card);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.6);
+  scroll-snap-align:center;
+  transition:transform .2s, box-shadow .2s;
+  cursor:pointer;
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,.7)}
+.poster{width:100%;height:270px;object-fit:cover;display:block}
+.card-body{padding:10px}
+.movie-title{font-weight:600;font-size:14px;margin-bottom:4px}
+.meta{font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.rating{color:var(--accent);font-weight:600}
+footer{
+  width:100%;max-width:var(--max-w);
+  text-align:center;
+  padding:10px;
+  font-size:12px;
+  color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <img src="laison2.png" id="logo" alt="Logo" />
+
+    <div id="imagemHade" title="Publicar">
+      <img id="profile-pic" src="profile.png" alt="Foto de Perfil" />
+      <button onclick="showPostSection()" id="add" style="margin-left:10px;position: fixed;
+      top: 90%; cursor:pointer; background:black;border-radius:8px; padding:8px 16px; color:white;">
+        +
+      </button>
+    </div>
+
+    <br />
+    <div class="menu">
+      <a href="liaison.html" id="a"><img src="home.png" alt="" /></a>
+      <a href="home.html"><img src="amigos.png" alt="" /></a>
+      <a href="filmes.html"><img src="video.png" alt="" /></a>
+
+      <!-- 🔹 Ícone do chat com badge -->
+      <a href="chat.html" id="a" class="chat-link">
+        <img src="mensagem.png" alt="Mensagens" />
+        <span id="chatBadge">0</span>
+      </a>
+
+      <a href="procurar.html"><img src="search.png" alt="" /></a>
+      
+      <a href="gps.html"><img src="gps.png" alt="" /></a>
+    </div>
+  </header>
+
+  <br /><br /><br />
+  <br /><br /><br />
+  <br /><br /><br />
+
+  <!-- Modal de publicação -->
+  <section id="postSection">
+    <div class="post-box">
+      <textarea id="postText" placeholder="Escreva algo..." maxlength="300"></textarea>
+      <div class="file-inputs">
+        <label for="postImage" class="file-label">📷 Imagem
+          <input type="file" id="postImage" accept="image/*" />
+        </label>
+        <label for="postVideo" class="file-label">🎥 Vídeo
+          <input type="file" id="postVideo" accept="video/*" />
+        </label>
+      </div>
+      <small style="color:#aaa;">
+        Você pode postar: <strong>Texto + Imagem</strong> ou <strong>Vídeo + Texto</strong>.<br />
+        O vídeo deve ter no mínimo 10 segundos (se maior será cortado para 10s). Só é permitido um vídeo por usuário.
+      </small>
+      <button onclick="submitPost()">Publicar</button>
+      <button class="cancel" onclick="hidePostSection()">Cancelar</button>
+    </div>
+  </section>
+    <div class="controls">
+      <input id="search" class="search" placeholder="Pesquisar filmes..." />
+      <button class="btn" id="refresh">Atualizar</button>
+    </div>
+    <main>
+    <div class="scroll-area" id="scrollArea">
+      <section>
+        <div class="section-head"><h2>Estreias</h2><small id="premieres-count"></small></div>
+        <div class="hscroll" id="premieres-list"></div>
+      </section>
+      <section>
+        <div class="section-head"><h2>Em Cartaz</h2><small id="nowplaying-count"></small></div>
+        <div class="hscroll" id="nowplaying-list"></div>
+      </section>
+      <section>
+        <div class="section-head"><h2>Populares</h2><small id="popular-count"></small></div>
+        <div class="hscroll" id="popular-list"></div>
+      </section>
+      <section>
+        <div class="section-head"><h2>Melhores Avaliados</h2><small id="toprated-count"></small></div>
+        <div class="hscroll" id="toprated-list"></div>
+      </section>
+      <section>
+        <div class="section-head"><h2>Mais Assistidos</h2><small id="trending-count"></small></div>
+        <div class="hscroll" id="trending-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <span>© Laison</span>
+    <span id="last-updated"></span>
+  </footer>
+
+<script>
+const MOVIE_API_KEY = 'f5a1d43948a6c7361536ebaf00db0f5a';
+const TMDB_BASE = 'https://api.themoviedb.org/3';
+const IMG = 'https://image.tmdb.org/t/p/w500';
+
+// Cria o card de um filme
+function createCard(m){
+  const poster = m.poster_path ? IMG+m.poster_path : '';
+  const el = document.createElement('article');
+  el.className='card';
+  el.innerHTML=`
+    <img class="poster" src="${poster}" alt="${m.title}">
+    <div class="card-body">
+      <div class="movie-title">${m.title}</div>
+      <div class="meta"><span>${(m.release_date||'').slice(0,4)}</span><span class="rating">${m.vote_average.toFixed(1)}★</span></div>
+    </div>`;
+  el.onclick = () => window.open(`https://www.themoviedb.org/movie/${m.id}`,'_blank');
+  return el;
+}
+
+// Funções para buscar filmes
+async function fetchMovies(endpoint){
+  const res = await fetch(`${TMDB_BASE}${endpoint}?api_key=${MOVIE_API_KEY}&language=pt-BR&page=1`);
+  const data = await res.json();
+  return data.results || [];
+}
+
+async function fetchTrending(){
+  const res = await fetch(`${TMDB_BASE}/trending/movie/week?api_key=${MOVIE_API_KEY}&language=pt-BR`);
+  const data = await res.json();
+  return data.results || [];
+}
+
+// Renderiza as listas principais
+async function render(){
+  document.getElementById('refresh').disabled=true;
+
+  const [premieres, now, popular, top, trending] = await Promise.all([
+    fetchMovies('/movie/upcoming'),
+    fetchMovies('/movie/now_playing'),
+    fetchMovies('/movie/popular'),
+    fetchMovies('/movie/top_rated'),
+    fetchTrending()
+  ]);
+
+  renderList('premieres', premieres);
+  renderList('nowplaying', now);
+  renderList('popular', popular);
+  renderList('toprated', top);
+  renderList('trending', trending);
+
+  document.getElementById('last-updated').textContent = 'Atualizado ' + new Date().toLocaleString();
+  document.getElementById('refresh').disabled=false;
+}
+
+// Renderiza uma lista de filmes em um container específico
+function renderList(name, list){
+  const container = document.getElementById(name+'-list');
+  const count = document.getElementById(name+'-count');
+  container.innerHTML = '';
+  list.forEach(m => container.appendChild(createCard(m)));
+  count.textContent = list.length+' filmes';
+}
+
+// Busca filmes na API quando o usuário digita
+async function searchMovies(query){
+  const res = await fetch(`${TMDB_BASE}/search/movie?api_key=${MOVIE_API_KEY}&language=pt-BR&query=${encodeURIComponent(query)}&page=1`);
+  const data = await res.json();
+  return data.results || [];
+}
+
+// Seção de resultados de pesquisa
+const searchSection = document.createElement('section');
+searchSection.innerHTML = `
+  <div class="section-head"><h2>Resultados da Pesquisa</h2><small id="search-count"></small></div>
+  <div class="hscroll" id="search-list"></div>
+`;
+document.getElementById('scrollArea').prepend(searchSection);
+
+// Event listener para busca
+document.getElementById('search').addEventListener('input', async e => {
+  const q = e.target.value.trim();
+
+  if(!q){
+    searchSection.style.display = 'none';
+    return;
+  }
+
+  searchSection.style.display = 'block';
+  const results = await searchMovies(q);
+
+  const container = document.getElementById('search-list');
+  const count = document.getElementById('search-count');
+  container.innerHTML = '';
+  results.forEach(m => container.appendChild(createCard(m)));
+  count.textContent = results.length+' filmes encontrados';
+});
+
+// Botão de atualizar
+document.getElementById('refresh').onclick = render;
+
+// Render inicial
+render();
+</script>
+
+  <!-- Feed de publicações -->
+  <main id="feed"></main>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import {
+      getDatabase,
+      ref,
+      push,
+      set,
+      onChildAdded,
+      get,
+      child,
+      update
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    import {
+      getStorage,
+      ref as storageRef,
+      uploadBytes,
+      getDownloadURL
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDsP7lNqu-tDpJxpsyv8t1DW0M_u2EAE3o",
+      authDomain: "bartolomeu-cruz.firebaseapp.com",
+      databaseURL: "https://bartolomeu-cruz-default-rtdb.firebaseio.com",
+      projectId: "bartolomeu-cruz",
+      storageBucket: "bartolomeu-cruz.appspot.com",
+      messagingSenderId: "408863884951",
+      appId: "1:408863884951:web:13e8c2282139c1307dcbd2",
+      measurementId: "G-8TF4WLHKX3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const storage = getStorage(app);
+    const postsRef = ref(database, 'posts');
+
+    const user = localStorage.getItem('username') || 'Anônimo';
+    const profilePic = localStorage.getItem('profilePic') || 'img/default-profile.png';
+    document.getElementById("profile-pic").src = profilePic;
+
+    function showPostSection() {
+      document.getElementById('postSection').classList.add('active');
+      clearPostInputs();
+    }
+    function hidePostSection() {
+      document.getElementById('postSection').classList.remove('active');
+      clearPostInputs();
+    }
+    function clearPostInputs() {
+      document.getElementById('postText').value = "";
+      document.getElementById('postImage').value = "";
+      document.getElementById('postVideo').value = "";
+    }
+    window.showPostSection = showPostSection;
+    window.hidePostSection = hidePostSection;
+
+    // --- código de posts mantido (não repeti tudo para economizar espaço) ---
+
+    // 🔹 FUNÇÃO PARA ATUALIZAR BADGE DO CHAT
+    async function updateChatBadge() {
+      const currentUser = localStorage.getItem('username');
+      if (!currentUser) return;
+
+      let totalUnread = 0;
+      const friendsRef = ref(database, `amigos/${currentUser}`);
+      const snapshot = await get(friendsRef);
+
+      if (snapshot.exists()) {
+        const friends = snapshot.val();
+        for (const friendUsername of Object.keys(friends)) {
+          const lastReadRef = ref(database, `users/${currentUser}/lastRead/${friendUsername}`);
+          const lastReadSnap = await get(lastReadRef);
+          const lastRead = lastReadSnap.exists() ? lastReadSnap.val() : 0;
+
+          const chatKey = [currentUser, friendUsername].sort().join('_');
+          const messagesRef = ref(database, `chats/${chatKey}/messages`);
+          const messagesSnap = await get(messagesRef);
+
+          if (messagesSnap.exists()) {
+            const messages = messagesSnap.val();
+            Object.values(messages).forEach(msg => {
+              if (msg.sender === friendUsername && msg.timestamp > lastRead) {
+                totalUnread++;
+              }
+            });
+          }
+        }
+      }
+
+      const badge = document.getElementById('chatBadge');
+      if (totalUnread > 0) {
+        badge.textContent = totalUnread;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    // Atualiza badge ao carregar página
+    updateChatBadge();
+  </script>
+</body>
+
+</html>

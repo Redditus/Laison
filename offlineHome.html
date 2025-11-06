@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>offline</title>
+</head>
+<body>
+  
+  <!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Laison</title>
+<style>
+  :root{
+    --bg:#121212; --card:#1e1e1e; --muted:#9e9e9e; --accent:#ff4d4d;
+    --glass: rgba(255,255,255,0.04);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:var(--bg); color:#fff;}
+  header{display:flex;align-items:center;gap:12px;padding:14px 20px;background:#0f0f0f;border-bottom:1px solid rgba(255,255,255,0.05)}
+  header img{width:38px;height:38px;border-radius:8px}
+  header h1{font-size:18px;margin:0}
+  main{max-width:1200px;margin:20px auto;padding:12px}
+  .topRow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .search{flex:1;display:flex;gap:8px}
+  .search input{flex:1;padding:10px 12px;border-radius:10px;border:0;background:var(--card);color:#fff}
+  .search button{padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}
+  .filters{display:flex;gap:8px;align-items:center}
+  .filters select, .filters button{padding:10px;border-radius:10px;border:0;background:var(--card);color:#fff;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .card{background:var(--glass);padding:10px;border-radius:12px;display:flex;flex-direction:column;gap:8px;transition:transform .18s}
+  .card:hover{transform:translateY(-6px)}
+  .cover{width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#222;display:flex;align-items:center;justify-content:center}
+  .cover img{width:100%;height:100%;object-fit:cover}
+  .meta{font-size:13px}
+  .meta b{display:block;font-weight:700}
+  .meta small{color:var(--muted)}
+  .card .actions{display:flex;gap:6px;align-items:center;justify-content:space-between}
+  .card button{padding:8px;border-radius:8px;border:0;background:#252525;color:#fff;cursor:pointer;font-weight:700}
+  .sectionTitle{display:flex;align-items:center;justify-content:space-between;margin:18px 0 8px}
+  .sectionTitle h2{margin:0;font-size:16px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap}
+  .tag{padding:6px 12px;border-radius:999px;background:#171717;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:0.2s}
+  .tag:hover{background:#222}
+  footer{padding:40px 0;text-align:center;color:var(--muted);font-size:13px}
+
+  /* Player estilo app */
+  .playerSheet{position:fixed;left:0;right:0;bottom:0;background:#181818;border-top:1px solid rgba(255,255,255,0.1);padding:18px;z-index:999;display:none;flex-direction:column;align-items:center;gap:14px;box-shadow:0 -4px 20px rgba(0,0,0,0.6)}
+  .playerSheet.active{display:flex}
+  .playerCoverBig{width:220px;height:220px;border-radius:16px;overflow:hidden;background:#222}
+  .playerCoverBig img{width:100%;height:100%;object-fit:cover}
+  .playerInfo{text-align:center}
+  .playerInfo b{display:block;font-size:18px;margin-top:8px}
+  .playerInfo .small{font-size:14px;color:var(--muted)}
+  .progress{display:flex;align-items:center;gap:8px;width:100%;max-width:500px}
+  .progress input[type="range"]{flex:1}
+  .controlsRow{display:flex;gap:24px;align-items:center;justify-content:center;margin-top:6px}
+  .controlsRow button{background:transparent;border:0;color:#fff;font-size:22px;cursor:pointer}
+  .bigBtn{width:60px;height:60px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .extras{display:flex;gap:14px;margin-top:10px}
+  .extras button{padding:8px 12px;border-radius:8px;border:0;background:#252525;color:#fff;cursor:pointer;font-size:14px}
+  @media(max-width:600px){
+    .playerCoverBig{width:160px;height:160px}
+  }
+  a{
+    text-decoration: none;
+    margin-left: 2rem;
+    color: white;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  input{
+    outline: none;
+  }
+  
+</style>
+</head>
+<body>
+<header>
+  <img src="icon512.png" alt="LIA">
+  <h1>Laison</h1>
+  
+  <center>
+    <a href="liaison.html">Home</a>
+   <a href="chat.html">chat</a>
+   <a href="gps.html">GPS</a>
+  </center>
+</header>
+
+<main>
+  <div class="topRow">
+    <div class="search">
+      <input id="query" placeholder="Pesquisar artista, música..." />
+      <button id="btnSearch">Pesquisar</button>
+    </div>
+    <div class="filters">
+      <select id="provider">
+        <option value="itunes">iTunes (padrão)</option>
+      </select>
+      <button id="btnRefresh">Atualizar</button>
+    </div>
+  </div>
+
+  <div class="sectionTitle">
+    <h2>Gêneros / Categorias</h2>
+    <div class="small">Clique para filtrar</div>
+  </div>
+  <div id="genres" class="tags"></div>
+
+  <div class="sectionTitle">
+    <h2>Mais Ouvidas</h2>
+  </div>
+  <div id="mostPlayedWrap" class="grid" style="margin-bottom:18px"></div>
+
+  <div class="sectionTitle">
+    <h2>Explorar — Resultados</h2>
+    <div class="small" id="resultInfo">Pesquise algo ou escolha um gênero.</div>
+  </div>
+  <div id="grid" class="grid"></div>
+</main>
+
+<!-- Player -->
+<div id="player" class="playerSheet">
+  <div class="playerCoverBig"><img id="playerCover" src="icon512.png"></div>
+  <div class="playerInfo">
+    <b id="playerTitle">Título</b>
+    <div id="playerArtist" class="small">Artista</div>
+  </div>
+  <div class="progress">
+    <span id="curTime" class="small">0:00</span>
+    <input id="seek" type="range" min="0" max="100" value="0">
+    <span id="durTime" class="small">0:00</span>
+  </div>
+  <div class="controlsRow">
+    <button id="btnPrev">⏮</button>
+    <button id="btnShuffle">🔀</button>
+    <button id="btnPlay" class="bigBtn">▶</button>
+    <button id="btnReplay">🔁</button>
+    <button id="btnNext">⏭</button>
+  </div>
+  <div class="extras">
+    <button id="btnFav">♡ Favorito</button>
+    <button id="btnDownload">⬇ Baixar</button>
+    <input id="vol" type="range" min="0" max="1" step="0.01" value="1" style="width:100px">
+  </div>
+</div>
+
+<footer>Demo com iTunes API (previews públicos).</footer>
+
+<script>
+const API_ITUNES = 'https://itunes.apple.com/search';
+const genresList = [
+  {key:'Pop', q:'pop'}, {key:'Rock', q:'rock'}, {key:'Hip-Hop', q:'hip hop'},
+  {key:'Electronic', q:'electronic'}, {key:'Classical', q:'classical'},
+  {key:'Animes', q:'anime'}
+];
+let state={items:[],queue:[],index:-1,audio:new Audio(),playing:false,shuffle:false,repeat:false};
+
+/* refs */
+const grid=document.querySelector('#grid');
+const resultInfo=document.querySelector('#resultInfo');
+const genresWrap=document.querySelector('#genres');
+const mostPlayedWrap=document.querySelector('#mostPlayedWrap');
+const queryInput=document.querySelector('#query');
+const btnSearch=document.querySelector('#btnSearch');
+const btnRefresh=document.querySelector('#btnRefresh');
+const player=document.querySelector('#player');
+const playerCover=document.querySelector('#playerCover');
+const playerTitle=document.querySelector('#playerTitle');
+const playerArtist=document.querySelector('#playerArtist');
+const seek=document.querySelector('#seek');
+const curTime=document.querySelector('#curTime');
+const durTime=document.querySelector('#durTime');
+const btnPlay=document.querySelector('#btnPlay');
+const btnNext=document.querySelector('#btnNext');
+const btnPrev=document.querySelector('#btnPrev');
+const btnShuffle=document.querySelector('#btnShuffle');
+const btnReplay=document.querySelector('#btnReplay');
+const vol=document.querySelector('#vol');
+const btnFav=document.querySelector('#btnFav');
+const btnDownload=document.querySelector('#btnDownload');
+
+function timeFormat(sec){sec=Math.floor(sec||0);const m=Math.floor(sec/60),s=sec%60;return `${m}:${s.toString().padStart(2,'0')}`;}
+function escapeHtml(s){return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');}
+
+/* fetch itunes */
+async function fetchItunes(q,limit=12){
+  try{
+    const url=`${API_ITUNES}?term=${encodeURIComponent(q)}&limit=${limit}&media=music`;
+    const res=await fetch(url);const data=await res.json();
+    return (data.results||[]).map(t=>({
+      id:`itunes_${t.trackId||Math.random()}`, trackName:t.trackName||'Untitled',
+      artistName:t.artistName||'Unknown', artwork:t.artworkUrl100?t.artworkUrl100.replace('100x100','600x600'):'',
+      preview_url:t.previewUrl||null
+    }));
+  }catch(e){return []}
+}
+
+/* render grid */
+function renderGrid(items){
+  grid.innerHTML='';if(!items.length){resultInfo.textContent='Nenhum resultado.';return;}
+  resultInfo.textContent=`${items.length} músicas`;
+  items.forEach(item=>{
+    const card=document.createElement('div');card.className='card';
+    card.innerHTML=`<div class="cover"><img src="${item.artwork||'icon512.png'}"></div>
+      <div class="meta"><b>${escapeHtml(item.trackName)}</b><small>${escapeHtml(item.artistName)}</small></div>
+      <div class="actions"><button class="playBtn">▶ Ouvir</button><button class="favBtn">♡</button></div>`;
+    card.querySelector('.cover').onclick=()=>openPlayerFromItem(item,items,true);
+    card.querySelector('.playBtn').onclick=()=>openPlayerFromItem(item,items,true);
+    card.querySelector('.favBtn').onclick=()=>alert('Favorito salvo');
+    grid.appendChild(card);
+  });
+}
+
+/* render genres */
+async function renderGenres(){
+  genresWrap.innerHTML='';
+  for(const g of genresList){
+    const el=document.createElement('div');el.className='tag';el.textContent=g.key;
+    el.onclick=async()=>{resultInfo.textContent=`Carregando ${g.key}...`;const items=await fetchItunes(g.q,20);state.items=items;renderGrid(items);};
+    genresWrap.appendChild(el);
+  }
+}
+
+/* player */
+function openPlayerFromItem(item,list,autoplay=false){
+  state.queue=list;state.index=list.findIndex(x=>x.id===item.id);
+  if(state.index<0)state.index=0;
+  loadIndex(state.index,autoplay);
+  player.classList.add('active');
+}
+function loadIndex(i,autoplay=false){
+  state.index=(i+state.queue.length)%state.queue.length;
+  const it=state.queue[state.index];if(!it)return;
+  playerCover.src=it.artwork||'icon512.png';
+  playerTitle.textContent=it.trackName;playerArtist.textContent=it.artistName;
+  state.audio.src=it.preview_url||'';state.audio.load();
+  if(autoplay&&it.preview_url)state.audio.play();
+  updatePlayButton(false);
+}
+function togglePlay(){if(state.audio.paused){state.audio.play();updatePlayButton(true);}else{state.audio.pause();updatePlayButton(false);}}
+function updatePlayButton(p){state.playing=p;btnPlay.textContent=p?'⏸':'▶';}
+function nextTrack(){loadIndex(state.index+1,true);}
+function prevTrack(){if(state.audio.currentTime>3){state.audio.currentTime=0}else{loadIndex(state.index-1,true);}}
+state.audio.ontimeupdate=()=>{seek.max=Math.floor(state.audio.duration||0);seek.value=Math.floor(state.audio.currentTime||0);curTime.textContent=timeFormat(state.audio.currentTime);durTime.textContent=timeFormat(state.audio.duration)};
+state.audio.onended=()=>{if(state.repeat){state.audio.currentTime=0;state.audio.play();}else nextTrack();};
+seek.oninput=()=>state.audio.currentTime=seek.value;
+vol.oninput=()=>state.audio.volume=vol.value;
+btnPlay.onclick=togglePlay;btnNext.onclick=nextTrack;btnPrev.onclick=prevTrack;
+btnShuffle.onclick=()=>{state.shuffle=!state.shuffle;btnShuffle.style.opacity=state.shuffle?1:0.5};
+btnReplay.onclick=()=>{state.repeat=!state.repeat;btnReplay.style.opacity=state.repeat?1:0.5};
+
+/* search */
+async function doSearch(q){if(!q){grid.innerHTML='';return;}resultInfo.textContent='Carregando...';const items=await fetchItunes(q,24);state.items=items;renderGrid(items);}
+btnSearch.onclick=()=>doSearch(queryInput.value.trim());
+queryInput.onkeyup=e=>{if(e.key==='Enter')doSearch(queryInput.value.trim());};
+btnRefresh.onclick=()=>renderGrid(state.items);
+
+/* init */
+(async function(){renderGenres();const initial=await fetchItunes('top hits',16);state.items=initial;renderGrid(initial);})();
+</script>
+</body>
+</html>
+
+<video src="video.png" muted mutcontrols></video>
+</body>
+</html>
